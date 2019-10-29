@@ -5,21 +5,26 @@ using UnityEngine;
 public class CameraRotate : MonoBehaviour {
     private bool canRotate = true;
     private Quaternion startingRotation;
+    private ControlManager controlManager;
 
     public float rotateSpeed = 10.0f;
+    public GameObject controlManagerObject;
 
     void Start() {
         startingRotation = transform.rotation;
+        controlManager = new ObjectComponent<ControlManager>(controlManagerObject).comp;
     }
 
     // Update is called once per frame
     void Update() {
-        float h = Input.GetAxisRaw("Horizontal");
+        if (controlManager.currentControl == Controls.MoveCamera) {
+            float h = Input.GetAxisRaw("Horizontal");
 
-        if (h != 0 && canRotate) {
-            canRotate = false;
-            StopAllCoroutines();
-            StartCoroutine(Rotate(h));
+            if (h != 0 && canRotate) {
+                canRotate = false;
+                StopAllCoroutines();
+                StartCoroutine(Rotate(h));
+            }
         }
     }
 
